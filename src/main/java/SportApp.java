@@ -1,10 +1,15 @@
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import model.Activity;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import repository.ActivityRepositoryImpl;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class SportApp {
@@ -15,6 +20,20 @@ public class SportApp {
         try (MongoClient mongoClient = MongoClients.create(connectionString)) {
             List<Document> databases = mongoClient.listDatabases().into(new ArrayList<>());
             databases.forEach(db -> logger.info("Database : {}", db.toJson()));
+            MongoDatabase database = mongoClient.getDatabase("myActivity");
+            MongoCollection<Document> activityCollection = database.getCollection("activity");
+            ActivityRepositoryImpl activityRepository = new ActivityRepositoryImpl(activityCollection);
+
+            Activity activity = new Activity(
+                    "Tennis",
+                    2,
+                    new Date(2023, 06, 15),
+                    302,
+                    24
+            );
+            logger.info("Activity saved {}", activityRepository.save(activity));
+        } catch (Exception e) {
+            logger.error("An error occurred during connection ==> {}", e);
         }
     }
 }
