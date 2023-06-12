@@ -3,10 +3,12 @@ import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import model.Activity;
+import model.User;
 import org.bson.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import repository.ActivityRepositoryImpl;
+import repository.UserRepositoryImpl;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +23,7 @@ public class SportApp {
             List<Document> databases = mongoClient.listDatabases().into(new ArrayList<>());
             databases.forEach(db -> logger.info("Database : {}", db.toJson()));
             MongoDatabase database = mongoClient.getDatabase("myActivity");
+
             MongoCollection<Document> activityCollection = database.getCollection("activity");
             ActivityRepositoryImpl activityRepository = new ActivityRepositoryImpl(activityCollection);
 
@@ -32,6 +35,18 @@ public class SportApp {
                     24
             );
             logger.info("Activity saved {}", activityRepository.save(activity));
+
+            MongoCollection<Document> userCollection = database.getCollection("user");
+            UserRepositoryImpl userRepository = new UserRepositoryImpl(userCollection);
+
+            User user = new User(
+                    "Paire",
+                    "Benoit",
+                    "08/05/1989",
+                    "Mr"
+            );
+            logger.info("User saved {}", userRepository.save(user));
+
         } catch (Exception e) {
             logger.error("An error occurred during connection ==> {}", e);
         }
