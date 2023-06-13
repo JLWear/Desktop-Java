@@ -12,5 +12,7 @@ public interface ActivityRepository {
 
     List<Activity> getAll();
 
+    void deleteById(ObjectId id);
+
     Activity update(Activity activity) throws Exception;
 }

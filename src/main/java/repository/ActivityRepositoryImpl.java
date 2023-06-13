@@ -1,6 +1,7 @@
 package repository;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
@@ -47,6 +48,12 @@ public class ActivityRepositoryImpl implements ActivityRepository {
         }
         return activities;
     }
+
+    @Override
+    public void deleteById(ObjectId id) {
+        this.collection.deleteOne(new Document("_id", id));
+    }
+
 
     @Override
     public Activity update(Activity activity) throws Exception {
