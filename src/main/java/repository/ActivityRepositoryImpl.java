@@ -4,6 +4,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.InsertOneResult;
 import model.Activity;
 import org.bson.Document;
+import org.bson.conversions.Bson;
+import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +19,21 @@ public class ActivityRepositoryImpl implements ActivityRepository {
         this.collection = collection;
     }
     @Override
-    public String save(Activity activity) {
+    public ObjectId save(Activity activity) {
         InsertOneResult result = this.collection.insertOne(activityToDocument(activity));
-        return result.getInsertedId().toString();
+        return result.getInsertedId().asObjectId().getValue();
     }
+
+    public Activity getActivityById (ObjectId id) throws Exception {
+        Document query = new Document();
+        query.append("_id", id);
+        Document result = this.collection.find(query).first();
+        if (result == null) {
+            throw new Exception();
+        }
+        return documentToActivity(result);
+    }
+
     @Override
     public List<Activity> getAll() {
         List<Activity> activities = new ArrayList<>();

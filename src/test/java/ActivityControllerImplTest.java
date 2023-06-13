@@ -1,10 +1,8 @@
 import com.mongodb.client.MongoCollection;
+import mapper.ActivityMapper;
 import model.Activity;
 import org.bson.Document;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -27,7 +25,6 @@ public class ActivityControllerImplTest {
     @Mock
     ActivityRepositoryImpl activityRepository;
     Activity activity = new Activity(
-            ,
             "Tennis",
             2,
             new Date(2023, 06, 15),
@@ -39,10 +36,11 @@ public class ActivityControllerImplTest {
 
     ActivityRepositoryImpl classUnderTest;
 
-    @BeforeEach
-    public void setUp(){
-        classUnderTest = new ActivityRepositoryImpl(activityRepository);
-    }
+    //@Disabled
+    //@BeforeEach
+    //public void setUp(){
+    //    classUnderTest = new ActivityRepositoryImpl(activity);
+    //}
 
     @Test
     @DisplayName("Test if the save method of the repository is called with an Activity")
@@ -61,7 +59,7 @@ public class ActivityControllerImplTest {
     }
 
     @Nested
-    class getTest(){
+    class getTest {
         @Test
         @DisplayName("Test if get methode of the repository is called")
         public void getAll_shouldCallRepository(){
@@ -89,4 +87,5 @@ public class ActivityControllerImplTest {
         }
 
     }
+
 }

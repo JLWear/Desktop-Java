@@ -5,8 +5,8 @@ import org.bson.types.ObjectId;
 import java.util.Date;
 
 public class Activity {
-    public Activity(ObjectId id, String name, Integer duration, Date date, Integer rpe, Integer load){
-        this.id = id;
+    public Activity(ObjectId _id, String name, Integer duration, Date date, Integer rpe, Integer load){
+        this._id = _id;
         this.name = name;
         this.duration = duration;
         this.date = date;
@@ -22,7 +22,7 @@ public class Activity {
         this.load = load;
     }
 
-    private ObjectId id;
+    private ObjectId _id;
     private String name;
     private int duration;
     private Date date;
@@ -30,7 +30,7 @@ public class Activity {
     private int load;
 
     public ObjectId getId() {
-        return id;
+        return _id;
     }
 
     public String getName() {
