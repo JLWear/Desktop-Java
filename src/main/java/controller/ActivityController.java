@@ -22,4 +22,16 @@ public class ActivityController {
     public List<Activity> getAllActivities() {
         return activityRepository.getAll();
     }
+
+    public Activity getActivityById(ObjectId id) throws Exception {
+        return activityRepository.getActivityById(id);
+    }
+
+    public void deleteActivity(ObjectId id) {
+        activityRepository.deleteById(id);
+    }
+
+    public Activity updateActivity(Activity activity) throws Exception {
+        return activityRepository.update(activity);
+    }
 }
