@@ -1,10 +1,14 @@
 package repository;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import com.mongodb.client.result.InsertOneResult;
+import com.mongodb.client.result.UpdateResult;
 import model.Activity;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+import org.bson.json.JsonObject;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
@@ -24,6 +28,7 @@ public class ActivityRepositoryImpl implements ActivityRepository {
         return result.getInsertedId().asObjectId().getValue();
     }
 
+    @Override
     public Activity getActivityById (ObjectId id) throws Exception {
         Document query = new Document();
         query.append("_id", id);
@@ -41,5 +46,22 @@ public class ActivityRepositoryImpl implements ActivityRepository {
             activities.add(documentToActivity(document));
         }
         return activities;
+    }
+
+    @Override
+    public Activity update(Activity activity) throws Exception {
+        Bson filter = Filters.eq("_id", activity.getId());
+        Document document = activityToDocument(activity);
+
+        document.remove("_id");
+
+        Bson update = new Document("$set", document);
+        UpdateResult result = collection.updateOne(filter, update);
+
+        if (result.getMatchedCount() != 1) {
+            throw new Exception("No such Activity exists to update");
+        }
+
+        return getActivityById(activity.getId());
     }
 }

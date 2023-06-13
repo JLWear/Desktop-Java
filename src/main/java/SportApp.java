@@ -27,21 +27,32 @@ public class SportApp {
 
             MongoCollection<Document> activityCollection = database.getCollection("activity");
             ActivityRepositoryImpl activityRepository = new ActivityRepositoryImpl(activityCollection);
-            /*
+
+//            Activity activity = new Activity(
+//                    "Hockey sur gazon",
+//                    2,
+//                    new Date(2023, 06, 15),
+//                    302,
+//                    24
+//            );
+//            ObjectId result = activityRepository.save(activity);
+//            logger.info("Activity saved {}", result);
+
             Activity activity = new Activity(
-                    "Hockey sur gazon",
+                    new ObjectId("64886ec2fd0b9f307e9a8e3a"),
+                    "Tir à l'arc pour handicapé (blessé à la jambe)",
                     2,
                     new Date(2023, 06, 15),
-                    302,
+                    45,
                     24
             );
-            logger.info("Activity saved {}", activityRepository.save(activity));
 
-            ObjectId result = activityRepository.save(activity);
-            */
-            Activity test = activityRepository.getActivityById(new ObjectId("648831c65b8c293cbba0f5c0"));
+            //Activity test = activityRepository.getActivityById(result);
+            //test.setName("TEST");
+            //logger.info(test.getName());
 
-            logger.info(test.getName());
+            Activity test2 = activityRepository.update(activity);
+            logger.info(test2.getName());
             /*
             MongoCollection<Document> userCollection = database.getCollection("user");
             UserRepositoryImpl userRepository = new UserRepositoryImpl(userCollection);

@@ -12,5 +12,5 @@ public interface ActivityRepository {
 
     List<Activity> getAll();
 
-
+    Activity update(Activity activity) throws Exception;
 }
