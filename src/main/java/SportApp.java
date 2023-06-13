@@ -28,6 +28,7 @@ public class SportApp {
             ActivityRepositoryImpl activityRepository = new ActivityRepositoryImpl(activityCollection);
 
             Activity activity = new Activity(
+                    ,
                     "Tennis",
                     2,
                     new Date(2023, 06, 15),
@@ -46,6 +47,8 @@ public class SportApp {
                     "Mr"
             );
             logger.info("User saved {}", userRepository.save(user));
+
+            logger.info("Activity : {}", activityRepository.getAll());
 
         } catch (Exception e) {
             logger.error("An error occurred during connection ==> {}", e);

@@ -1,8 +1,14 @@
 package repository;
 
-import com.mongodb.client.result.InsertOneResult;
 import model.Activity;
 
+import java.util.List;
+
 public interface ActivityRepository {
-    InsertOneResult save(Activity activity);
+    String save(Activity activity);
+
+    List<Activity> getAll();
+
+
+
 }

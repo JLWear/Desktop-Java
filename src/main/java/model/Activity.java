@@ -1,9 +1,19 @@
 package model;
 
-import java.time.Duration;
+import org.bson.types.ObjectId;
+
 import java.util.Date;
 
 public class Activity {
+    public Activity(ObjectId id, String name, Integer duration, Date date, Integer rpe, Integer load){
+        this.id = id;
+        this.name = name;
+        this.duration = duration;
+        this.date = date;
+        this.rpe = rpe;
+        this.load = load;
+    }
+
     public Activity(String name, Integer duration, Date date, Integer rpe, Integer load){
         this.name = name;
         this.duration = duration;
@@ -12,11 +22,16 @@ public class Activity {
         this.load = load;
     }
 
+    private ObjectId id;
     private String name;
     private int duration;
     private Date date;
     private int rpe;
     private int load;
+
+    public ObjectId getId() {
+        return id;
+    }
 
     public String getName() {
         return name;

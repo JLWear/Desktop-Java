@@ -2,6 +2,7 @@ package mapper;
 
 import model.Activity;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 
 import java.util.Date;
 
@@ -19,6 +20,7 @@ public class ActivityMapper {
 
     public static Activity documentToActivity(Document document) {
         Activity activity = new Activity(
+                (ObjectId) document.getObjectId("_id"),
                 (String) document.get("name"),
                 (int) document.get("duration"),
                 (Date) document.get("date"),
