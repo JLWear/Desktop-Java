@@ -16,6 +16,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Date;
+import java.util.List;
 
 
 public class ActivityRegistration extends JFrame implements ActionListener {
@@ -57,7 +58,7 @@ public class ActivityRegistration extends JFrame implements ActionListener {
     }// Main class constructor
 
     // menu choices
-    JMenuItem Registration, Exit;
+    JMenuItem Registration, Exit, ListActivity;
 
     // menu method for creation and style
     private void setMenu() {
@@ -78,7 +79,11 @@ public class ActivityRegistration extends JFrame implements ActionListener {
         Exit.setBackground(Color.WHITE);
         messagesObj.add(Exit);
 
-
+        ListActivity = new JMenuItem("List activites");
+        ListActivity.setToolTipText("Show all registered activities");
+        ListActivity.addActionListener(this);
+        ListActivity.setBackground(Color.WHITE);
+        messagesObj.add(ListActivity);
 
         barObj.add(messagesObj);
         setJMenuBar(barObj);
@@ -93,15 +98,29 @@ public class ActivityRegistration extends JFrame implements ActionListener {
             int registReply = JOptionPane.showConfirmDialog(this, "Voulez-vous enregistrer une activité ?",
                     "Register", JOptionPane.YES_NO_OPTION);
             if(registReply == JOptionPane.YES_OPTION){ //registReply is what u have choosen
-                activityRegistration ();
+                Container container = getContentPane();
+                container.removeAll();
+                container.revalidate();
+                container.repaint();
+                activityRegistration();
             }
-        }else if (e.getSource() == Exit){
+        } else if (e.getSource() == ListActivity){
+            int exitReply = JOptionPane.showConfirmDialog(this, "Voulez-vous voir toutes les activités enregistrées ?",
+                    "Exit", JOptionPane.YES_NO_OPTION);
+            if(exitReply == JOptionPane.YES_OPTION){
+                Container container = getContentPane();
+                container.removeAll();
+                container.revalidate();
+                container.repaint();
+                displayActivities();
+            }
+        } else if (e.getSource() == Exit){
             int exitReply = JOptionPane.showConfirmDialog(this, "Voulez-vous quitter l'application ?",
                     "Exit", JOptionPane.YES_NO_OPTION);// exitReply is what u have choosen
             if(exitReply == JOptionPane.YES_OPTION){// if its has been chose/ program will shutdown
                 System.exit(0);
             }
-        } // if end
+        }
     }// actionPerformed
 
     public void activityRegistration(){
@@ -129,9 +148,10 @@ public class ActivityRegistration extends JFrame implements ActionListener {
         JTextField jtfDateLabel = new JTextField("Date", 7);
         jtfDateLabel.setEditable(false);
 
-        JTextField jtfText3 = new JTextField(7);
-        JTextField jtfRpeLabel = new JTextField("Rpe", 17);
-        jtfRpeLabel.setEditable(false);
+        JTextField jtfRPELabel = new JTextField("RPE", 10);
+        jtfRPELabel.setEditable(false);
+        SpinnerModel value = new SpinnerNumberModel(0, 0, 10, 1);
+        JSpinner jtfSpinner = new JSpinner(value);
 
 // submit registration
         JButton submitRegObj = new JButton("Submit");
@@ -145,8 +165,8 @@ public class ActivityRegistration extends JFrame implements ActionListener {
         container.add(jftComboBox2);
         container.add(jftComboBox3);
         container.add(jtfDateLabel);
-        container.add(jtfText3);
-        container.add(jtfRpeLabel);
+        container.add(jtfSpinner);
+        container.add(jtfRPELabel);
         container.add(submitRegObj);
 
         container.setLayout(new FlowLayout());
@@ -163,7 +183,7 @@ public class ActivityRegistration extends JFrame implements ActionListener {
                 int selectedMonth = jftComboBox2.getSelectedIndex() + 1; // Ajouter 1 pour correspondre aux mois de 1 à 12
                 int selectedYear = Integer.parseInt((String) jftComboBox3.getSelectedItem());
                 Date date = new Date(selectedYear - 1900, selectedMonth - 1, selectedDay); // Créer un objet Date à partir des composants sélectionnés
-                Integer rpe = Integer.parseInt(jtfText3.getText());
+                Integer rpe = Integer.parseInt(jtfSpinner.getValue().toString());
 
                 // Créer l'objet Activity
                 String connectionString = "mongodb+srv://thomas:kfNaplaiusOuzFqi@cluster0.ysbjvuj.mongodb.net/?retryWrites=true&w=majority";
@@ -181,4 +201,53 @@ public class ActivityRegistration extends JFrame implements ActionListener {
         });
     }
 
-}// Main clases end
+    public void displayActivities(){
+        String connectionString = "mongodb+srv://thomas:kfNaplaiusOuzFqi@cluster0.ysbjvuj.mongodb.net/?retryWrites=true&w=majority";
+
+        List<Activity> listActivities;
+
+        try (MongoClient mongoClient = MongoClients.create(connectionString)) {
+            MongoDatabase database = mongoClient.getDatabase("myActivity");
+            MongoCollection<Document> activityCollection = database.getCollection("activity");
+            ActivityRepositoryImpl activityRepository = new ActivityRepositoryImpl(activityCollection);
+            ActivityController activityController = new ActivityController(activityRepository);
+            listActivities = activityController.getAllActivities();
+        }
+        Container container = getContentPane();
+        JPanel panelListActivities = new JPanel();
+        panelListActivities.setLayout(new BoxLayout(panelListActivities, BoxLayout.Y_AXIS));
+
+
+
+        for (Activity activity : listActivities) {
+
+            JTextField jtfNameLabel = new JTextField(activity.getName(), 17);
+            jtfNameLabel.setEditable(false);
+            panelListActivities.add(jtfNameLabel);
+
+            JTextField jtfDurationLabel = new JTextField(activity.getDuration().toString(), 17);
+            jtfDurationLabel.setEditable(false);
+            panelListActivities.add(jtfDurationLabel);
+
+            JTextField jtfDateLabel = new JTextField(activity.getDate().toString(), 17);
+            jtfDateLabel.setEditable(false);
+            panelListActivities.add(jtfDateLabel);
+
+            JTextField jtfRPELabel = new JTextField(activity.getRpe().toString(), 17);
+            jtfRPELabel.setEditable(false);
+            panelListActivities.add(jtfRPELabel);
+
+            JTextField jtfLoadLabel = new JTextField(activity.getLoad().toString(), 17);
+            jtfLoadLabel.setEditable(false);
+            panelListActivities.add(jtfLoadLabel);
+
+            JPanel separator = new JPanel();
+            separator.setSize(50, 3);
+            separator.setBackground(Color.LIGHT_GRAY);
+            panelListActivities.add(separator);
+
+        }
+        JScrollPane srollingPanel = new JScrollPane(panelListActivities, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        container.add(srollingPanel);
+    }
+}

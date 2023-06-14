@@ -4,10 +4,11 @@ import model.Activity;
 import org.bson.types.ObjectId;
 import repository.ActivityRepository;
 
+import java.util.Date;
 import java.util.List;
 
 public class ActivityController {
-    private ActivityRepository activityRepository;
+    private final ActivityRepository activityRepository;
 
     public ActivityController(ActivityRepository activityRepository) {
         this.activityRepository = activityRepository;
@@ -33,5 +34,9 @@ public class ActivityController {
 
     public Activity updateActivity(Activity activity) throws Exception {
         return activityRepository.update(activity);
+    }
+
+    public List<Activity> getActivityByDate(Date date) {
+        return activityRepository.getActivityByDate(date);
     }
 }

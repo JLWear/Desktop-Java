@@ -1,6 +1,7 @@
 package repository;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoCursor;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
@@ -13,7 +14,9 @@ import org.bson.json.JsonObject;
 import org.bson.types.ObjectId;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import static mapper.ActivityMapper.activityToDocument;
 import static mapper.ActivityMapper.documentToActivity;
@@ -70,5 +73,16 @@ public class ActivityRepositoryImpl implements ActivityRepository {
         }
 
         return getActivityById(activity.getId());
+    }
+
+    @Override
+    public List<Activity> getActivityByDate(Date date) {
+        List<Activity> activities = new ArrayList<>();
+        Document query = new Document("date", new Document("$eq", date));
+
+        for (Document document : this.collection.find(query)) {
+            activities.add(documentToActivity(document));
+        }
+        return activities;
     }
 }

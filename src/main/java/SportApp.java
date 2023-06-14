@@ -54,6 +54,8 @@ public class SportApp {
 // Delete Activity => via ID
 //            activityRepository.deleteById(new ObjectId("64886ec2fd0b9f307e9a8e3a"));
 
+            //new Window();
+
 
         } catch (Exception e) {
             logger.error("An error occurred during connection ==> {}", e);
