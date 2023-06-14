@@ -22,6 +22,13 @@ public class Activity {
         this.load = load;
     }
 
+    public Activity(String name, Integer duration, Date date, Integer rpe){
+        this.name = name;
+        this.duration = duration;
+        this.date = date;
+        this.rpe = rpe;
+    }
+
     private ObjectId _id;
     private String name;
     private int duration;
