@@ -20,6 +20,7 @@ import java.util.List;
 
 
 public class ActivityRegistration extends JFrame implements ActionListener {
+    private Container container;
     private static final Logger logger = LoggerFactory.getLogger(ActivityRegistration.class);
     private String dates[]
             = { "1", "2", "3", "4", "5",
@@ -50,10 +51,9 @@ public class ActivityRegistration extends JFrame implements ActionListener {
     public ActivityRegistration(String title) {
         super(title);
         setMenu(); //create menu
-        setSize(300, 400);// size
+        setSize(800, 600);// size
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // close running program if window are closed
         setLocationRelativeTo(null); // set window position at center
-        setResizable(false); //resizable or not
         show();
     }// Main class constructor
 
@@ -95,25 +95,20 @@ public class ActivityRegistration extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent e) {
 
         if (e.getSource() == Registration){
-            int registReply = JOptionPane.showConfirmDialog(this, "Voulez-vous enregistrer une activité ?",
-                    "Register", JOptionPane.YES_NO_OPTION);
-            if(registReply == JOptionPane.YES_OPTION){ //registReply is what u have choosen
-                Container container = getContentPane();
-                container.removeAll();
-                container.revalidate();
-                container.repaint();
-                activityRegistration();
-            }
+            container = this.getContentPane();
+            container.removeAll();
+            activityRegistration(container);
+            container.repaint();
+            container.revalidate();
+            container.setLayout(new FlowLayout());
+
         } else if (e.getSource() == ListActivity){
-            int exitReply = JOptionPane.showConfirmDialog(this, "Voulez-vous voir toutes les activités enregistrées ?",
-                    "Exit", JOptionPane.YES_NO_OPTION);
-            if(exitReply == JOptionPane.YES_OPTION){
-                Container container = getContentPane();
-                container.removeAll();
-                container.revalidate();
-                container.repaint();
-                displayActivities();
-            }
+            container = this.getContentPane();
+            container.removeAll();
+            displayActivities(container);
+            container.repaint();
+            container.revalidate();
+            container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
         } else if (e.getSource() == Exit){
             int exitReply = JOptionPane.showConfirmDialog(this, "Voulez-vous quitter l'application ?",
                     "Exit", JOptionPane.YES_NO_OPTION);// exitReply is what u have choosen
@@ -123,9 +118,8 @@ public class ActivityRegistration extends JFrame implements ActionListener {
         }
     }// actionPerformed
 
-    public void activityRegistration(){
+    public void activityRegistration(Container container){
 
-        Container container = getContentPane();
 // Activity textbox and label
         JTextField jtfRegLabel = new JTextField("Activity Registration", 25);
         jtfRegLabel.setHorizontalAlignment(JTextField.CENTER);
@@ -169,10 +163,6 @@ public class ActivityRegistration extends JFrame implements ActionListener {
         container.add(jtfRPELabel);
         container.add(submitRegObj);
 
-        container.setLayout(new FlowLayout());
-        setSize(300, 400); // set size of window
-        setVisible(true);// set it visible
-
         submitRegObj.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -201,7 +191,7 @@ public class ActivityRegistration extends JFrame implements ActionListener {
         });
     }
 
-    public void displayActivities(){
+    public void displayActivities(Container container){
         String connectionString = "mongodb+srv://thomas:kfNaplaiusOuzFqi@cluster0.ysbjvuj.mongodb.net/?retryWrites=true&w=majority";
 
         List<Activity> listActivities;
@@ -213,7 +203,6 @@ public class ActivityRegistration extends JFrame implements ActionListener {
             ActivityController activityController = new ActivityController(activityRepository);
             listActivities = activityController.getAllActivities();
         }
-        Container container = getContentPane();
         JPanel panelListActivities = new JPanel();
         panelListActivities.setLayout(new BoxLayout(panelListActivities, BoxLayout.Y_AXIS));
 
@@ -247,7 +236,7 @@ public class ActivityRegistration extends JFrame implements ActionListener {
             panelListActivities.add(separator);
 
         }
-        JScrollPane srollingPanel = new JScrollPane(panelListActivities, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        container.add(srollingPanel);
+        JScrollPane scrollingPanel = new JScrollPane(panelListActivities, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        container.add(scrollingPanel);
     }
 }
