@@ -12,11 +12,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.sql.Date;
 import java.util.List;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 
 public class ActivityRegistration extends JFrame implements ActionListener {
@@ -43,27 +48,38 @@ public class ActivityRegistration extends JFrame implements ActionListener {
             "2015", "2016", "2017", "2018",
             "2019", "2020", "2021", "2022", "2023" };
 
-    public static void main (String []args){
+    public static void main(String[] args) {
         new ActivityRegistration("Menu");
-
     }
+
+    private void setupUI() {
+        setMenu();
+        setSize(375, 600);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        getContentPane().setBackground(Color.decode("#FFFFFF"));
+        setVisible(true);
+    }
+
     // Main class constructor
     public ActivityRegistration(String title) {
         super(title);
-        setMenu(); //create menu
-        setSize(800, 600);// size
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // close running program if window are closed
-        setLocationRelativeTo(null); // set window position at center
-        show();
+        setupUI();
     }// Main class constructor
 
     // menu choices
-    JMenuItem Registration, Exit, ListActivity;
+    JMenuItem Registration, ListActivity, Exit;
 
     // menu method for creation and style
     private void setMenu() {
-        JMenuBar barObj = new JMenuBar(); // create menuBar obj
-        JMenu messagesObj = new JMenu("Menu"); //create menu bar menu object
+        JMenuBar barObj = new JMenuBar();
+        JMenu messagesObj = new JMenu("Menu");
+        UIManager.put("MenuBar.background", Color.decode("#2E4053")); // a modern navy color
+        UIManager.put("Menu.background", Color.decode("#2E4053"));
+        UIManager.put("MenuItem.background", Color.decode("#FFFFFF"));
+        UIManager.put("MenuItem.opaque", true);
+        UIManager.put("Menu.foreground", Color.decode("#FFFFFF")); // white color for the menu items' text
+        UIManager.put("MenuItem.foreground", Color.decode("#2E4053")); // navy color for the menu items' text
 
         barObj.setBackground(Color.LIGHT_GRAY); // set menu bar bg color
 
@@ -73,17 +89,17 @@ public class ActivityRegistration extends JFrame implements ActionListener {
         Registration.setBackground(Color.WHITE); // set menu bar menu options bg color
         messagesObj.add(Registration); // add Registration into messages
 
-        Exit = new JMenuItem("Exit");
-        Exit.setToolTipText("Here you will exit");
-        Exit.addActionListener(this);
-        Exit.setBackground(Color.WHITE);
-        messagesObj.add(Exit);
-
         ListActivity = new JMenuItem("List activites");
         ListActivity.setToolTipText("Show all registered activities");
         ListActivity.addActionListener(this);
         ListActivity.setBackground(Color.WHITE);
         messagesObj.add(ListActivity);
+
+        Exit = new JMenuItem("Exit");
+        Exit.setToolTipText("Here you will exit");
+        Exit.addActionListener(this);
+        Exit.setBackground(Color.WHITE);
+        messagesObj.add(Exit);
 
         barObj.add(messagesObj);
         setJMenuBar(barObj);
@@ -93,75 +109,96 @@ public class ActivityRegistration extends JFrame implements ActionListener {
     // implemented method
     @Override
     public void actionPerformed(ActionEvent e) {
-
-        if (e.getSource() == Registration){
-            container = this.getContentPane();
-            container.removeAll();
-            activityRegistration(container);
-            container.repaint();
-            container.revalidate();
+        Container container = this.getContentPane();
+        container.removeAll();
+        if (e.getSource() == Registration) {
             container.setLayout(new FlowLayout());
-
-        } else if (e.getSource() == ListActivity){
-            container = this.getContentPane();
-            container.removeAll();
-            displayActivities(container);
-            container.repaint();
-            container.revalidate();
+            activityRegistration(container);
+        } else if (e.getSource() == ListActivity) {
             container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        } else if (e.getSource() == Exit){
+            displayActivities(container);
+        } else if (e.getSource() == Exit) {
             int exitReply = JOptionPane.showConfirmDialog(this, "Voulez-vous quitter l'application ?",
-                    "Exit", JOptionPane.YES_NO_OPTION);// exitReply is what u have choosen
-            if(exitReply == JOptionPane.YES_OPTION){// if its has been chose/ program will shutdown
+                    "Exit", JOptionPane.YES_NO_OPTION);
+            if (exitReply == JOptionPane.YES_OPTION) {
                 System.exit(0);
             }
         }
+        container.repaint();
+        container.revalidate();
     }// actionPerformed
 
     public void activityRegistration(Container container){
 
-// Activity textbox and label
-        JTextField jtfRegLabel = new JTextField("Activity Registration", 25);
+
+        JTextField jtfRegLabel = new JTextField("Activity Registration : ", 25);
         jtfRegLabel.setHorizontalAlignment(JTextField.CENTER);
         jtfRegLabel.setEditable(false);
+        jtfRegLabel.setBackground(Color.decode("#2E4053"));
+        jtfRegLabel.setForeground(Color.decode("#FFFFFF"));
+        jtfRegLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
+        JLabel titleLabel = new JLabel("Activity Registration");
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        container.add(titleLabel);
 
-        JTextField jtfText1 = new JTextField(7);
-        JTextField jtfNameLabel = new JTextField("Name Activity", 17);
+        JTextField jtfNameLabel = new JTextField("Name Activity : ", 17);
         jtfNameLabel.setEditable(false);
+        JTextField jtfText1 = new JTextField(7);
 
-        JTextField jtfText2 = new JTextField(7);
-        JTextField jtfDurationLabel = new JTextField("Duration", 17);
+        JTextField jtfDurationLabel = new JTextField("Duration : ", 17);
         jtfDurationLabel.setEditable(false);
+        JTextField jtfText2 = new JTextField(7);
 
+        JTextField jtfDateLabel = new JTextField("Date : ", 7);
+        jtfDateLabel.setEditable(false);
         JComboBox jftComboBox1 = new JComboBox(dates);
 
         JComboBox jftComboBox2 = new JComboBox(months);
 
         JComboBox jftComboBox3 = new JComboBox(years);
-        JTextField jtfDateLabel = new JTextField("Date", 7);
-        jtfDateLabel.setEditable(false);
 
-        JTextField jtfRPELabel = new JTextField("RPE", 10);
+
+        JTextField jtfRPELabel = new JTextField("RPE : ", 10);
         jtfRPELabel.setEditable(false);
         SpinnerModel value = new SpinnerNumberModel(0, 0, 10, 1);
         JSpinner jtfSpinner = new JSpinner(value);
 
-// submit registration
         JButton submitRegObj = new JButton("Submit");
+        submitRegObj.setFont(new Font("Arial", Font.PLAIN, 14));
+        submitRegObj.setForeground(Color.decode("#000"));
 
-        container.add(jtfRegLabel);
-        container.add(jtfText1);
-        container.add(jtfNameLabel);
-        container.add(jtfText2);
-        container.add(jtfDurationLabel);
-        container.add(jftComboBox1);
-        container.add(jftComboBox2);
-        container.add(jftComboBox3);
-        container.add(jtfDateLabel);
-        container.add(jtfSpinner);
-        container.add(jtfRPELabel);
-        container.add(submitRegObj);
+        JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        namePanel.add(jtfNameLabel);
+        namePanel.setOpaque(false);
+        namePanel.add(jtfText1);
+        container.add(namePanel);
+
+        JPanel durationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        durationPanel.add(jtfDurationLabel);
+        durationPanel.setOpaque(false);
+        durationPanel.add(jtfText2);
+        container.add(durationPanel);
+
+        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        datePanel.add(jtfDateLabel);
+        datePanel.setOpaque(false);
+        datePanel.add(jftComboBox1);
+        datePanel.add(jftComboBox2);
+        datePanel.add(jftComboBox3);
+        container.add(datePanel);
+
+        JPanel rpePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        rpePanel.add(jtfRPELabel);
+        rpePanel.setOpaque(false);
+        rpePanel.add(jtfSpinner);
+        container.add(rpePanel);
+
+        JPanel submitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        submitPanel.add(submitRegObj);
+        submitPanel.setOpaque(false);
+        container.add(submitPanel);
 
         submitRegObj.addActionListener(new ActionListener() {
             @Override
@@ -204,38 +241,62 @@ public class ActivityRegistration extends JFrame implements ActionListener {
             listActivities = activityController.getAllActivities();
         }
         JPanel panelListActivities = new JPanel();
+        panelListActivities.setBackground(Color.decode("#FFFFFF")); // set a light background color for modern look
         panelListActivities.setLayout(new BoxLayout(panelListActivities, BoxLayout.Y_AXIS));
 
+        JLabel titleLabel = new JLabel("My Activities");
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 24));  // set the font, you can change the size as needed
+        titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);  // center the label
+        titleLabel.setBorder(new EmptyBorder(10, 0, 10, 0));  // 10px padding at the top and the bottom
+
+        panelListActivities.add(titleLabel);
+
+        JSeparator titleSeparator = new JSeparator();
+        titleSeparator.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        panelListActivities.add(titleSeparator);
 
 
         for (Activity activity : listActivities) {
 
-            JTextField jtfNameLabel = new JTextField(activity.getName(), 17);
+            JTextField jtfNameLabel = new JTextField("Name: " + activity.getName(), 17);
             jtfNameLabel.setEditable(false);
+            jtfNameLabel.setBorder(BorderFactory.createEmptyBorder());
+            jtfNameLabel.setBackground(Color.decode("#E1F5FE")); // Light blue background
+            jtfNameLabel.setFont(jtfNameLabel.getFont().deriveFont(Font.BOLD)); // Set text to bold
             panelListActivities.add(jtfNameLabel);
 
-            JTextField jtfDurationLabel = new JTextField(activity.getDuration().toString(), 17);
+            JTextField jtfDurationLabel = new JTextField("Duration: " + activity.getDuration().toString() + " minute(s)", 17);
             jtfDurationLabel.setEditable(false);
+            jtfDurationLabel.setBorder(BorderFactory.createEmptyBorder());
+            jtfDurationLabel.setBackground(Color.decode("#E1F5FE")); // Light blue background
             panelListActivities.add(jtfDurationLabel);
 
-            JTextField jtfDateLabel = new JTextField(activity.getDate().toString(), 17);
+            DateFormat df = new SimpleDateFormat("dd MMMM yyyy", Locale.FRENCH);
+
+            JTextField jtfDateLabel = new JTextField("Date: " + df.format(activity.getDate()), 17);
             jtfDateLabel.setEditable(false);
+            jtfDateLabel.setBorder(BorderFactory.createEmptyBorder());
+            jtfDateLabel.setBackground(Color.decode("#E1F5FE")); // Light blue background
             panelListActivities.add(jtfDateLabel);
 
-            JTextField jtfRPELabel = new JTextField(activity.getRpe().toString(), 17);
+            JTextField jtfRPELabel = new JTextField("RPE: " + activity.getRpe().toString(), 17);
             jtfRPELabel.setEditable(false);
+            jtfRPELabel.setBorder(BorderFactory.createEmptyBorder());
+            jtfRPELabel.setBackground(Color.decode("#E1F5FE")); // Light blue background
             panelListActivities.add(jtfRPELabel);
 
-            JTextField jtfLoadLabel = new JTextField(activity.getLoad().toString(), 17);
+            JTextField jtfLoadLabel = new JTextField("Load: " + activity.getLoad().toString(), 17);
             jtfLoadLabel.setEditable(false);
+            jtfLoadLabel.setBorder(BorderFactory.createEmptyBorder());
+            jtfLoadLabel.setBackground(Color.decode("#E1F5FE")); // Light blue background
             panelListActivities.add(jtfLoadLabel);
 
-            JPanel separator = new JPanel();
-            separator.setSize(50, 3);
-            separator.setBackground(Color.LIGHT_GRAY);
+            // Add a JSeparator for a more modern look
+            JSeparator separator = new JSeparator();
+            separator.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             panelListActivities.add(separator);
-
         }
+
         JScrollPane scrollingPanel = new JScrollPane(panelListActivities, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         container.add(scrollingPanel);
     }
