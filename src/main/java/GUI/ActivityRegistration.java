@@ -206,8 +206,6 @@ public class ActivityRegistration extends JFrame implements ActionListener {
         JPanel panelListActivities = new JPanel();
         panelListActivities.setLayout(new BoxLayout(panelListActivities, BoxLayout.Y_AXIS));
 
-
-
         for (Activity activity : listActivities) {
 
             JTextField jtfNameLabel = new JTextField(activity.getName(), 17);
