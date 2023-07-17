@@ -44,47 +44,74 @@ public class Register {
 
     public void register(Container container){
 
-        // Activity textbox and label
-        JTextField jtfRegLabel = new JTextField("Activity Registration", 25);
+        JTextField jtfRegLabel = new JTextField("Activity Registration : ", 25);
         jtfRegLabel.setHorizontalAlignment(JTextField.CENTER);
         jtfRegLabel.setEditable(false);
+        jtfRegLabel.setBackground(Color.decode("#2E4053"));
+        jtfRegLabel.setForeground(Color.decode("#FFFFFF"));
+        jtfRegLabel.setFont(new Font("Arial", Font.BOLD, 18));
 
+        JLabel titleLabel = new JLabel("Activity Registration");
+        titleLabel.setHorizontalAlignment(JLabel.CENTER);
+        titleLabel.setFont(new Font("Arial", Font.BOLD, 20));
+        container.add(titleLabel);
 
-        JTextField jtfText1 = new JTextField(7);
-        JTextField jtfNameLabel = new JTextField("Name Activity", 17);
+        JTextField jtfNameLabel = new JTextField("Name Activity : ", 17);
         jtfNameLabel.setEditable(false);
+        JTextField jtfText1 = new JTextField(7);
 
-        JTextField jtfText2 = new JTextField(7);
-        JTextField jtfDurationLabel = new JTextField("Duration", 17);
+        JTextField jtfDurationLabel = new JTextField("Duration : ", 17);
         jtfDurationLabel.setEditable(false);
+        JTextField jtfText2 = new JTextField(7);
 
+        JTextField jtfDateLabel = new JTextField("Date : ", 7);
+        jtfDateLabel.setEditable(false);
         JComboBox jftComboBox1 = new JComboBox(dates);
 
         JComboBox jftComboBox2 = new JComboBox(months);
 
         JComboBox jftComboBox3 = new JComboBox(years);
-        JTextField jtfDateLabel = new JTextField("Date", 7);
-        jtfDateLabel.setEditable(false);
 
-        JTextField jtfRPELabel = new JTextField("RPE", 10);
+
+        JTextField jtfRPELabel = new JTextField("RPE : ", 10);
         jtfRPELabel.setEditable(false);
         SpinnerModel value = new SpinnerNumberModel(0, 0, 10, 1);
         JSpinner jtfSpinner = new JSpinner(value);
 
         JButton submitRegObj = new JButton("Submit");
+        submitRegObj.setFont(new Font("Arial", Font.PLAIN, 14));
+        submitRegObj.setForeground(Color.decode("#000"));
 
-        container.add(jtfRegLabel);
-        container.add(jtfText1);
-        container.add(jtfNameLabel);
-        container.add(jtfText2);
-        container.add(jtfDurationLabel);
-        container.add(jftComboBox1);
-        container.add(jftComboBox2);
-        container.add(jftComboBox3);
-        container.add(jtfDateLabel);
-        container.add(jtfSpinner);
-        container.add(jtfRPELabel);
-        container.add(submitRegObj);
+        JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        namePanel.add(jtfNameLabel);
+        namePanel.setOpaque(false);
+        namePanel.add(jtfText1);
+        container.add(namePanel);
+
+        JPanel durationPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        durationPanel.add(jtfDurationLabel);
+        durationPanel.setOpaque(false);
+        durationPanel.add(jtfText2);
+        container.add(durationPanel);
+
+        JPanel datePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        datePanel.add(jtfDateLabel);
+        datePanel.setOpaque(false);
+        datePanel.add(jftComboBox1);
+        datePanel.add(jftComboBox2);
+        datePanel.add(jftComboBox3);
+        container.add(datePanel);
+
+        JPanel rpePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        rpePanel.add(jtfRPELabel);
+        rpePanel.setOpaque(false);
+        rpePanel.add(jtfSpinner);
+        container.add(rpePanel);
+
+        JPanel submitPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        submitPanel.add(submitRegObj);
+        submitPanel.setOpaque(false);
+        container.add(submitPanel);
 
         submitRegObj.addActionListener(new ActionListener() {
             @Override
@@ -99,8 +126,7 @@ public class Register {
                 Integer rpe = Integer.parseInt(jtfSpinner.getValue().toString());
 
                 // Créer l'objet Activity
-                //String connectionString = "mongodb+srv://thomas:kfNaplaiusOuzFqi@cluster0.ysbjvuj.mongodb.net/?retryWrites=true&w=majority";
-                String connectionString = "mongodb+srv://app-de-test:app-de-test@cluster0.mcjcyio.mongodb.net/?retryWrites=true&w=majority";
+                String connectionString = "mongodb+srv://thomas:kfNaplaiusOuzFqi@cluster0.ysbjvuj.mongodb.net/?retryWrites=true&w=majority";
                 try (MongoClient mongoClient = MongoClients.create(connectionString)) {
                     MongoDatabase database = mongoClient.getDatabase("myActivity");
                     MongoCollection<Document> activityCollection = database.getCollection("activity");

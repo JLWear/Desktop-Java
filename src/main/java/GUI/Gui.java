@@ -1,5 +1,7 @@
 package GUI;
 
+import model.Training;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -19,8 +21,14 @@ public class Gui extends JFrame implements ActionListener {
     }
 
     private void setMenu() {
-        JMenuBar barObj = new JMenuBar(); // create menuBar obj
-        JMenu messagesObj = new JMenu("Menu"); //create menu bar menu object
+        JMenuBar barObj = new JMenuBar();
+        JMenu messagesObj = new JMenu("Menu");
+        UIManager.put("MenuBar.background", Color.decode("#2E4053")); // a modern navy color
+        UIManager.put("Menu.background", Color.decode("#2E4053"));
+        UIManager.put("MenuItem.background", Color.decode("#FFFFFF"));
+        UIManager.put("MenuItem.opaque", true);
+        UIManager.put("Menu.foreground", Color.decode("#FFFFFF")); // white color for the menu items' text
+        UIManager.put("MenuItem.foreground", Color.decode("#2E4053")); // navy color for the menu items' text
 
         barObj.setBackground(Color.LIGHT_GRAY); // set menu bar bg color
 
@@ -47,7 +55,6 @@ public class Gui extends JFrame implements ActionListener {
         Exit.addActionListener(this);
         Exit.setBackground(Color.WHITE);
         messagesObj.add(Exit);
-
 
         barObj.add(messagesObj);
         setJMenuBar(barObj);
