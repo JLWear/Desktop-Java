@@ -7,7 +7,7 @@ import java.awt.event.ActionListener;
 
 public class Gui extends JFrame implements ActionListener {
 
-    JMenuItem Registration, ListActivity, Training, Exit;
+    JMenuItem Registration, ListActivity, Weekly, Exit;
 
     public Gui () {
         super("SportApp");
@@ -36,10 +36,11 @@ public class Gui extends JFrame implements ActionListener {
         ListActivity.setBackground(Color.WHITE);
         messagesObj.add(ListActivity);
 
-        Training = new JMenuItem("Training");
-        Training.addActionListener(this);
-        Training.setBackground(Color.WHITE);
-        messagesObj.add(Training);
+        Weekly = new JMenuItem("Weekly Training Load");
+        Weekly.setToolTipText("Show weekly training load data");
+        Weekly.addActionListener(this);
+        Weekly.setBackground(Color.WHITE);
+        messagesObj.add(Weekly);
 
         Exit = new JMenuItem("Exit");
         Exit.setToolTipText("Here you will exit");
@@ -55,36 +56,28 @@ public class Gui extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        Container container;
+        Container container = this.getContentPane();
+        container.removeAll();
 
         if (e.getSource() == Registration) {
-            container = this.getContentPane();
             container.removeAll();
             new GUI.Activities.Register().register(container);
-            container.repaint();
-            container.revalidate();
             container.setLayout(new FlowLayout());
-
         } else if (e.getSource() == ListActivity) {
-            container = this.getContentPane();
             container.removeAll();
             new GUI.Activities.DisplayAll().displayAll(container);
-            container.repaint();
-            container.revalidate();
             container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        } else if (e.getSource() == Training) {
-            container = this.getContentPane();
-            container.removeAll();
+        } else if (e.getSource() == Weekly) {
+            container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
             new GUI.Training.Weekly().weekly(container);
-            container.repaint();
-            container.revalidate();
-            container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-        }else if (e.getSource() == Exit){
+        } else if (e.getSource() == Exit){
             int exitReply = JOptionPane.showConfirmDialog(this, "Voulez-vous quitter l'application ?",
                     "Exit", JOptionPane.YES_NO_OPTION);
             if(exitReply == JOptionPane.YES_OPTION){
                 System.exit(0);
             }
         }
+        container.repaint();
+        container.revalidate();
     }
 }
