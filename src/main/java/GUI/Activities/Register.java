@@ -126,6 +126,7 @@ public class Register {
                 Integer rpe = Integer.parseInt(jtfSpinner.getValue().toString());
 
                 // Créer l'objet Activity
+                //String connectionString = "mongodb+srv://app-de-test:app-de-test@cluster0.mcjcyio.mongodb.net/?retryWrites=true&w=majority";
                 String connectionString = "mongodb+srv://thomas:kfNaplaiusOuzFqi@cluster0.ysbjvuj.mongodb.net/?retryWrites=true&w=majority";
                 try (MongoClient mongoClient = MongoClients.create(connectionString)) {
                     MongoDatabase database = mongoClient.getDatabase("myActivity");
